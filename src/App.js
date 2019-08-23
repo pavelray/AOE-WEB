@@ -12,15 +12,9 @@ function App(props) {
       <h1>{props.title}</h1>
       <Router>
         <div className="ui pointing menu">
-              <a className="item active">
-              <NavLink to="/" exact strict> Civilizations </NavLink> 
-            </a>
-            <a className="item">
-              <NavLink to="/Units" exact strict> Units </NavLink> 
-            </a>
-            <a className="item">
-              <NavLink to="/Structures" exact strict> Structures </NavLink> 
-            </a>
+              <NavLink className="item active" to="/" exact strict> Civilizations </NavLink> 
+              <NavLink className="item" to="/Units" exact strict> Units </NavLink> 
+              <NavLink className="item" to="/Structures" exact strict> Structures </NavLink> 
             <div className="right menu">
               <div className="item">
                 <div className="ui transparent icon input">

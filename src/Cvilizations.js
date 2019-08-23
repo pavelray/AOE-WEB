@@ -1,27 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import uniqueId from 'react-html-id';
 const axios = require('axios');
 
+
 export class CivilizationContainer extends React.Component {
+    constructor(){
+        super();
+        uniqueId.enableUniqueIds(this);
+    }
+
     state = {
-        Id : this.getId
+        Id : null
     };
 
-    getId=(id)=>{
-        return id;
+    setId=(id)=>{
+        this.setState(
+            {
+                Id : id
+            }
+        )
     }
-    
+ 
     render(){
+    console.log('CivilizationContainer render ', this.state);
     return (
         <>
             <div className="ui segment">
                 <h1 style={{textAlign:'center'}}>{this.props.title}</h1>
                 <div className="ui grid">
                     <div className="four wide column">
-                        <CivilizationList title="Civilizations" callBack={this.getId} />
+                        <CivilizationList  title="Civilizations" callBack={this.setId.bind(this)} />
                     </div>
                     <div className="eight wide column" id="civi-details">
-                        <CivilizationDetails  id={this.state.id}/>
+                        <CivilizationDetails  id={this.state.Id} />
                     </div>
                 </div>
             </div>
@@ -31,24 +43,32 @@ export class CivilizationContainer extends React.Component {
 }
 
 class CivilizationDetails extends React.Component{
-    state = {
-        id: this.props.id,
-        civilizationDetails: []
-    };
-
-    GetCivilizationById = (id) => {
-        axios.get(`https://cors-anywhere.herokuapp.com/https://age-of-empires-2-api.herokuapp.com/api/v1/civilization/${this.state.id}`)
+    constructor(){
+        super();
+        console.log('CivilizationDetails Constructor');
+    }
+    
+    componentWillReceiveProps({someProp}) {
+        this.setState({...this.state,someProp});
+        console.log(this.state,this.props.id);
+    }
+    
+    componentDidMount() {
+        axios.get(`https://cors-anywhere.herokuapp.com/https://age-of-empires-2-api.herokuapp.com/api/v1/civilization/${this.props.id}`)
         .then(response => {
-            console.log(response);
             this.setState({
                 civilizationDetails : response.data
             })
+            console.log('CivilizationDetails componentDidMount', this.state);
         });
     }
-
     render(){
+        //console.log('CivilizationDetails', this.props);
+        
+        
         return(
             <>
+            
             </>
         )
     }
@@ -57,15 +77,16 @@ class CivilizationDetails extends React.Component{
 class CivilizationList extends React.Component {
     constructor() {
         super();
-        this.state = {
-          error: null,
-          isLoaded: false,
-          civilizations: []
-        };
-      }
+        uniqueId.enableUniqueIds(this);
+    }
+
+    state = {
+    error: null,
+    isLoaded: false,
+    civilizations: []
+    };
 
     componentDidMount() {
-        console.log('Calling API', this.state);
         axios.get(`https://cors-anywhere.herokuapp.com/https://age-of-empires-2-api.herokuapp.com/api/v1/civilizations`)
         .then(response => {
             this.setState({
@@ -96,9 +117,9 @@ class CivilizationList extends React.Component {
                     {
                         items.map((index)=>{
                             return (
-                            <div className="ui raised segments">
+                            <div className="ui raised segments" key={this.nextUniqueId()}>
                                 <div className="ui segment">
-                                    <Civilization key={index.id} {...index} GetCivilizationById={this.props.callBack} />
+                                    <Civilization {...index} GetCivilizationById={this.props.callBack.bind(this)} />
                                 </div>
                             </div>
                             )
@@ -113,15 +134,17 @@ class CivilizationList extends React.Component {
 
 
 class Civilization extends React.Component{
-   
-
+    constructor(){
+        super();
+        uniqueId.enableUniqueIds(this);
+    }
     render(){
         return(
-            <div className="ui list">
+            <div className="ui list" key={this.nextUniqueId()}>
                 <div className="item">
-                    <div className="ui header" style={{cursor:'pointer'}} key={this.props.id} onClick={()=> this.props.GetCivilizationById(this.props.id)}>{this.props.name}</div>
+                    <div className="ui header" style={{cursor:'pointer'}}  onClick={()=> this.props.GetCivilizationById(this.props.id)}>{this.props.name}</div>
                     <div className="description">
-                        <label  className="ui label"><span>Army Type </span>: <span>{this.props.army_type}</span></label>
+                        <label  className="ui label" ><span>Army Type </span>: <span>{this.props.army_type}</span></label>
                         <h5>Pros:</h5>
                         <CivilizationBonus bonus={this.props.civilization_bonus}/>
                     </div>
@@ -137,7 +160,7 @@ const CivilizationBonus = (props)=> {
         {
             props.bonus.map((item)=>{
                 return (
-                    <div className="item">{item}</div>
+                    <div className="item" key={item}>{item}</div>
                 )
             })
         }
