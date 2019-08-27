@@ -1,29 +1,20 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import uniqueId from 'react-html-id';
 const axios = require('axios');
 
 
 export class CivilizationContainer extends React.Component {
-    constructor(){
-        super();
-        uniqueId.enableUniqueIds(this);
-    }
+    constructor(props){super(props);uniqueId.enableUniqueIds(this);}
 
     state = {
-        Id : null
+        Id : 1
     };
 
     setId=(id)=>{
-        this.setState(
-            {
-                Id : id
-            }
-        )
+        this.setState({Id : id});
     }
  
     render(){
-    console.log('CivilizationContainer render ', this.state);
     return (
         <>
             <div className="ui segment">
@@ -43,47 +34,58 @@ export class CivilizationContainer extends React.Component {
 }
 
 class CivilizationDetails extends React.Component{
-    constructor(){
-        super();
-        console.log('CivilizationDetails Constructor');
+    state={
+        id: null,
+        civilizationDetails : []
     }
     
-    componentWillReceiveProps({someProp}) {
-        this.setState({...this.state,someProp});
-        console.log(this.state,this.props.id);
-    }
-    
-    componentDidMount() {
-        axios.get(`https://cors-anywhere.herokuapp.com/https://age-of-empires-2-api.herokuapp.com/api/v1/civilization/${this.props.id}`)
+    componentWillReceiveProps(nextProps) {
+        
+        if(nextProps !== null){
+            this.setState({
+                isLoaded: false
+            });
+        }
+
+        axios.get(`https://cors-anywhere.herokuapp.com/https://age-of-empires-2-api.herokuapp.com/api/v1/civilization/${nextProps.id}`)
         .then(response => {
             this.setState({
+                id: nextProps.id,
+                isLoaded: true,
                 civilizationDetails : response.data
-            })
-            console.log('CivilizationDetails componentDidMount', this.state);
+            });
         });
     }
+    
     render(){
-        //console.log('CivilizationDetails', this.props);
         
-        
-        return(
-            <>
-            
-            </>
-        )
+        if(this.state.id === null && this.state.isLoaded === undefined) return(<></>)
+        else if(this.state.isLoaded === true){
+            return(
+                <>
+                    <Civilization {...this.state.civilizationDetails} />
+                </>
+            )
+        }
+        else{
+            console.log('State',this.state);
+            return (
+                <div className="ui loading segment">
+                <p></p>
+                <p></p>
+                </div>
+            );
+        }
     }
 }
 
 class CivilizationList extends React.Component {
-    constructor() {
-        super();
-        uniqueId.enableUniqueIds(this);
-    }
+    constructor(props) {super(props); uniqueId.enableUniqueIds(this); }
 
     state = {
-    error: null,
-    isLoaded: false,
-    civilizations: []
+        error: null,
+        isLoaded: false,
+        civilizations: []
     };
 
     componentDidMount() {
@@ -91,17 +93,19 @@ class CivilizationList extends React.Component {
         .then(response => {
             this.setState({
                 isLoaded: true,
-                items: response.data.civilizations
+                civilizations: response.data.civilizations
               });
-            console.log(this.state.items);
         })
         .catch(function (error) {
-            console.log(error);
+            this.setState({
+                error: error,
+                isLoaded: true
+              });
         });
     }
     
     render(){
-        const { error, isLoaded, items } = this.state;
+        const { error, isLoaded, civilizations } = this.state;
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -115,11 +119,11 @@ class CivilizationList extends React.Component {
             return(
                 <>
                     {
-                        items.map((index)=>{
+                        civilizations.map((civilization)=>{
                             return (
                             <div className="ui raised segments" key={this.nextUniqueId()}>
                                 <div className="ui segment">
-                                    <Civilization {...index} GetCivilizationById={this.props.callBack.bind(this)} />
+                                    <Civilization {...civilization} GetCivilizationById={this.props.callBack.bind(this)} />
                                 </div>
                             </div>
                             )
@@ -131,13 +135,9 @@ class CivilizationList extends React.Component {
     }
 }
 
-
-
 class Civilization extends React.Component{
-    constructor(){
-        super();
-        uniqueId.enableUniqueIds(this);
-    }
+    constructor(props) {super(props); uniqueId.enableUniqueIds(this); }
+    
     render(){
         return(
             <div className="ui list" key={this.nextUniqueId()}>

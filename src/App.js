@@ -29,11 +29,6 @@ function App(props) {
           <Route exact strict path="/Structures" render={()=> <StructureContainer title='Structures' />} />
           
       </Router>
-          
-        
-
-      
-     
     </div>
   );
 }
