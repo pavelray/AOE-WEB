@@ -16,22 +16,24 @@ export class CivilizationDetails extends Component {
         if(civilization !== null){
             return (
                 <div className="ui segment">
-                    <div className="ui list">
-                        <div className="item">
-                            <div className="ui header" style={{cursor:'pointer'}}>{civilization.name}</div>
-                            <br/>
-                            <div className="description">
-                                <div className="line"><h5 className="ui">Army Type: {civilization.army_type} .</h5></div>
-                                <div className="line"><h5 className="ui">Expansion: {civilization.expansion} .</h5></div>
-                                <div className="line"><h5 className="ui">Team Bonus: {civilization.team_bonus} .</h5></div>
-                                <br/>
-                                <h4 className="ui sub header">Pros:</h4>
-                                <CivilizationBonus bonus={civilization.civilization_bonus}/>
+                    <h2 className="ui dividing header">{civilization.name}</h2>
+                    <div className="description">
+                        <div className="inline fields">
+                            <div className="field">
+                                <label>Army Type: </label> <span>{civilization.army_type}</span> 
+                            </div>
+                            <div className="field">
+                                <label>Expansion : </label> <span>{civilization.expansion}</span>
+                            </div>
+                            <div className="field">
+                                <label>Team Bonus : </label> <span>{civilization.team_bonus}</span>
                             </div>
                         </div>
-                        
-                        <UniqueUnit url={civilization.unique_unit[0]} />
+                        <h4 className="ui dividing header">Pros:</h4>
+                        <CivilizationBonus bonus={civilization.civilization_bonus}/>
                     </div>
+                    
+                    <UniqueUnit url={civilization.unique_unit[0]} />
                 </div>
             );
         }

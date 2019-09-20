@@ -23,7 +23,7 @@ export class App extends Component {
     return (
         <div>
             <div className="ui container">
-                <div className="ui segment">
+                <div className="ui segment" style={{marginTop:50}}>
                     <CivilizationList/>
                 </div>
                 {this.renderCivilizationDetails()}

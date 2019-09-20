@@ -19,20 +19,41 @@ export class UniqueUnit extends Component {
         const unit = this.props.unit;
         return (
             <>
-                <div className="line"><h5><b>Unique Unit:</b> {unit.name}</h5></div>
+                <h4 className="ui dividing header">Unique Unit: {unit.name}</h4>
                 <div className="line"><p>{unit.description}</p></div>
-                <div className="line"><p>{unit.expansion}</p></div>
-                <div className="line"><p>{unit.age}</p></div>
-                <div className="line"><p>Build Time : {unit.build_time}</p></div>
-                <div className="line"><p>Reload Time:{unit.reload_time}</p></div>
-                <div className="line"><p>Attack Delay: {unit.attack_delay}</p></div>
-                <div className="line"><p>Movement Rate: {unit.movement_rate}</p></div>
-                <div className="line"><p>Line Of Sight: {unit.line_of_sight}</p></div>
-                <div className="line"><p>Hit Point: {unit.hit_points}</p></div>
-                <div className="line"><p>Range: {unit.range}</p></div>
-                <div className="line"><p>Attack: {unit.attack}</p></div>
-                <div className="line"><p>Armor: {unit.armor}</p></div>
-                <div className="line"><p>Accuracy: {unit.accuracy}</p></div>
+                <div className="line"><p>Expansion : {unit.expansion}</p></div>
+                <div className="line"><p>Age: {unit.age}</p></div>
+                <h5 className="ui dividing header">Stats</h5>
+                <table class="ui red table">
+                <thead>
+                    <tr>
+                        <th>Build Time</th>
+                        <th>Reload Time</th>
+                        <th>Attack Delay</th>
+                        <th>Movement Rate</th>
+                        <th>Line Of Sight</th>
+                        <th>Hit Point</th>
+                        <th>Range</th>
+                        <th>Attack</th>
+                        <th>Armor</th>
+                        <th>Accuracy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{unit.build_time}</td>
+                        <td>{unit.reload_time}</td>
+                        <td>{unit.attack_delay}</td>
+                        <td>{unit.movement_rate}</td>
+                        <td>{unit.line_of_sight}</td>
+                        <td>{unit.hit_points}</td>
+                        <td>{unit.range}</td>
+                        <td>{unit.attack}</td>
+                        <td>{unit.armor}</td>
+                        <td>{unit.accuracy}</td>
+                    </tr>
+                </tbody>
+                </table>
             </>
         )
     }
